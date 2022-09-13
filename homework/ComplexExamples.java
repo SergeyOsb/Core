@@ -55,23 +55,37 @@ public class ComplexExamples {
             new Person(8, "Amelia"),
     };
 
-    private static void printMap(Map<String, Long> anyMap) {
-        for (Map.Entry<String, Long> entry : anyMap.entrySet()) {
-            System.out.println("Key: " + entry.getKey() + "\nValue: " + entry.getValue());
-        }
-    }
-
     private static boolean fuzzySearch(String subLine, String line) {
         if (line == null || subLine == null || subLine.isEmpty() || line.isEmpty() || subLine.length() > line.length()) {
             return false;
         }
         int indexSubLine = 0;
         for (int i = 0; i < line.length(); i++) {
-            if (line.charAt(i) == subLine.charAt(indexSubLine) && ++indexSubLine == subLine.length()) {
-                return true;
+            if (line.charAt(i) == subLine.charAt(indexSubLine)) {
+                ++indexSubLine;
+                if (indexSubLine == subLine.length()) {
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    private static void findFirstPair(int[] inputArray, int sum) {
+        Map<Integer, Integer> map = new HashMap<>();
+        if (inputArray != null && inputArray.length >= 2) {
+            for (int i = 0; i < inputArray.length; i++) {
+                if (map.containsKey(sum - inputArray[i])) {
+                    System.out.printf("[%d, %d]", inputArray[map.get(sum - inputArray[i])], inputArray[i]);
+                    System.out.println();
+                    return;
+                }
+                map.put(inputArray[i], i);
+            }
+            System.out.println("pair not found");
+        } else {
+            System.out.println("pass correct values");
+        }
     }
 
         /*  Raw data:
@@ -143,7 +157,9 @@ public class ComplexExamples {
                 .distinct()
                 .sorted(Comparator.comparing(Person::getId))
                 .collect(Collectors.groupingBy(Person::getName, Collectors.counting()));
-        printMap(groupPersonName);
+        groupPersonName.forEach((key, value) -> {
+            System.out.println("Key: " + key + "\nValue: " + value);
+        });
 
         /*
         Task2
@@ -159,18 +175,7 @@ public class ComplexExamples {
 
         int sum = 10;
         int[] inputArray = {3, 4, 2, 7};
-        List<Integer> result = new ArrayList<>();
-
-        for (int i = 0; i < inputArray.length - 1; i++) {
-            for (int j = 0; j < inputArray.length; j++) {
-                if (inputArray[i] + inputArray[j] == sum) {
-                    result.add(inputArray[i]);
-                    result.add(inputArray[j]);
-                    System.out.println(result);
-                    break;
-                }
-            }
-        }
+        findFirstPair(inputArray, sum);
 
         /*
         Task3
